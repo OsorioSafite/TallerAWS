@@ -1,5 +1,5 @@
 
-# 🛠️ Guía de Instalación requisitos previos: AWS CLI y AWS SAM
+# 🛠️ Guía de Instalación requisitos previos: AWS CLI , AWS SAM y DOCKER
 
 ¡Bienvenido al Taller de AWS! En este repositorio encontraras todo el material necesario para el desarrollo del taller, pero antes de comennzar, es importante asegurarnos de que tienes instalados los requisitos previos necesarios para seguir el taller sin problemas.
 
