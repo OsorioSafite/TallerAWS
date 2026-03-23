@@ -124,9 +124,7 @@ Abre tu terminal y ejecuta la siguiente secuencia de comandos:
 
 ## 3️⃣ Instalación de Docker
 
-Docker es una plataforma que nos permite empaquetar y ejecutar aplicaciones en contenedores. AWS SAM utiliza Docker localmente para simular el entorno de AWS Lambda y poder probar tu código antes de subirlo a la nube.
-
-a continuación, encontrarás las instrucciones para instalar Docker en tu sistema operativo extraidas del sitio oficial de Docker: [Documentacion Docker Engine](https://docs.docker.com/engine/install/)
+Docker es una plataforma que nos permite empaquetar y ejecutar aplicaciones en contenedores, a continuación, encontrarás las instrucciones para instalar Docker en tu sistema operativo extraidas del sitio oficial de Docker: [Documentacion Docker Engine](https://docs.docker.com/engine/install/)
 
 ### 🐧 Linux (Docker Engine)
 # Install Docker Engine
