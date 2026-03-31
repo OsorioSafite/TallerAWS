@@ -4,6 +4,8 @@ version = 0.1
 stack_name = "backbone-taller-aws"
 region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
+s3_bucket = "artifacts-bucket"
 parameter_overrides = [
-
+    "BucketNameParameter=\"mascoteca-bucket-local\"",
+    "TableNameParameter=\"mascoteca-logs-local\""
 ]

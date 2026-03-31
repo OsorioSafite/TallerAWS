@@ -1,0 +1,142 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Infraestructura para "La Mascoteca Serverless" (Node.js)
+
+Parameters:
+  BucketNameParameter:
+    Type: String
+    Description: Nombre del bucket S3 inyectado desde el TOML
+  TableNameParameter:
+    Type: String
+    Description: Nombre de la tabla DynamoDB inyectada desde el TOML
+
+Resources:
+  MascotasBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketNameParameter
+
+  LogsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref TableNameParameter
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  RestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: backbone-api
+      OpenApiVersion: '2.0'
+      EndpointConfiguration: REGIONAL
+      MethodSettings:
+        - ResourcePath: /*
+          HttpMethod: '*'
+
+  GenerarMascotaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Timeout: 10
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref BucketNameParameter
+          TABLE_NAME: !Ref TableNameParameter
+      CodeUri: material-base/src/lambdas/
+      Handler: generar.handler
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref MascotasBucket
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LogsTable
+      Events:
+        ApiMascotas:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /mascotas
+            Method: post
+
+  GenerarMascotaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${GenerarMascotaFunction}
+      RetentionInDays: 7
+
+  ListarMascotasFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Timeout: 10
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref BucketNameParameter
+          TABLE_NAME: !Ref TableNameParameter
+      CodeUri: material-base/src/lambdas/
+      Handler: listar.handler
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref MascotasBucket
+        - Statement:
+            - Effect: Allow
+              Action: s3:ListBucket
+              Resource: !Sub arn:aws:s3:::${MascotasBucket}
+      Events:
+        ApiListar:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /mascotas
+            Method: get
+
+  ListarMascotasLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ListarMascotasFunction}
+      RetentionInDays: 7
+
+  DescargarMascotaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Timeout: 10
+      Runtime: nodejs24.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref BucketNameParameter
+          TABLE_NAME: !Ref TableNameParameter
+      CodeUri: material-base/src/lambdas/
+      Handler: descargar.handler
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref MascotasBucket
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LogsTable
+      Events:
+        ApiDescargar:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /descargar
+            Method: post
+
+  DescargarMascotaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${DescargarMascotaFunction}
+      RetentionInDays: 7
+
+Outputs:
+  ApigatewayURL:
+    Description: URL del API Gateway para acceder a las funciones Lambda
+    Value: !Sub https://localhost:4566/restapis/${RestApi}/backbone-api/_user_request_
