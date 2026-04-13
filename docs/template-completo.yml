@@ -49,7 +49,7 @@ Resources:
         Variables:
           BUCKET_NAME: !Ref BucketNameParameter
           TABLE_NAME: !Ref TableNameParameter
-      CodeUri: material-base/src/lambdas/
+      CodeUri: src/lambdas/
       Handler: generar.handler
       Policies:
         - S3WritePolicy:
@@ -81,7 +81,7 @@ Resources:
         Variables:
           BUCKET_NAME: !Ref BucketNameParameter
           TABLE_NAME: !Ref TableNameParameter
-      CodeUri: material-base/src/lambdas/
+      CodeUri: src/lambdas/
       Handler: listar.handler
       Policies:
         - S3ReadPolicy:
@@ -115,7 +115,7 @@ Resources:
         Variables:
           BUCKET_NAME: !Ref BucketNameParameter
           TABLE_NAME: !Ref TableNameParameter
-      CodeUri: material-base/src/lambdas/
+      CodeUri: src/lambdas/
       Handler: descargar.handler
       Policies:
         - S3ReadPolicy:

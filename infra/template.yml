@@ -78,7 +78,7 @@ Resources:
         Variables:
           BUCKET_NAME: !Ref BucketNameParameter
           TABLE_NAME: !Ref TableNameParameter
-      CodeUri: material-base/src/lambdas/
+      CodeUri: src/lambdas/
       Handler: listar.handler
       Policies:
         - S3ReadPolicy:
