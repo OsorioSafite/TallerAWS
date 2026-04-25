@@ -235,8 +235,3 @@ docker --version
 ```
 
 *(Deberías ver un texto indicando la versión instalada, por ejemplo: `Docker version 24.0.X, build...`)*
-
-```
-
-¿Te gustaría que redacte ahora el bloque Markdown con los pasos para configurar las credenciales mediante el comando `aws configure`?
-```
