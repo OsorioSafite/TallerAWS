@@ -1,2 +1,1 @@
-aws s3api create-bucket --bucket artifacts-bucket --region us-east-1 --profile 
-localstack
+aws s3api create-bucket --bucket artifacts-bucket --region us-east-1 --profile localstack
